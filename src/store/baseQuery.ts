@@ -89,8 +89,19 @@ export function errorMessage(error: unknown, fallback = 'Something went wrong.')
   if (Array.isArray(data?.detail)) {
     return (data.detail as { msg?: string }[]).map((d) => d.msg ?? '').filter(Boolean).join(', ')
   }
-  if ((error as FetchBaseQueryError)?.status === 'FETCH_ERROR') {
-    return 'Cannot reach the server. Is the backend running?'
+  const status = (error as FetchBaseQueryError)?.status
+
+  // The browser could not read a response. That is usually the network, but it
+  // is also what a blocked cross-origin response looks like — so don't assert
+  // the server is down when it may have answered and been discarded.
+  if (status === 'FETCH_ERROR') {
+    return 'Could not reach the server. Check your connection and try again.'
+  }
+  if (status === 'TIMEOUT_ERROR') {
+    return 'The server took too long to respond. Please try again.'
+  }
+  if (typeof status === 'number' && status >= 500) {
+    return 'Something went wrong on our side. Please try again in a moment.'
   }
   return fallback
 }
