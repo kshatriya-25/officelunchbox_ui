@@ -1,0 +1,223 @@
+@import "tailwindcss";
+
+/*
+  Design tokens ported verbatim from the Stitch export (DESIGN.md + code.html).
+  Material-3 style role names — surface / on-surface / container tiers — so the
+  markup reads the same way the design file does.
+
+  Brand story: Deep Forest Green anchors, Leaf Green signals freshness and
+  success, Turmeric Yellow is reserved for primary CTAs.
+*/
+@theme {
+  /* ── Surfaces ── */
+  --color-surface: #f9f9f7;
+  --color-surface-dim: #dadad8;
+  --color-surface-bright: #f9f9f7;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f4f4f2;
+  --color-surface-container: #eeeeec;
+  --color-surface-container-high: #e8e8e6;
+  --color-surface-container-highest: #e2e3e1;
+  --color-surface-variant: #e2e3e1;
+  --color-background: #f9f9f7;
+
+  /* ── Content ── */
+  --color-on-surface: #1a1c1b;
+  --color-on-surface-variant: #424844;
+  --color-on-background: #1a1c1b;
+  --color-inverse-surface: #2f3130;
+  --color-inverse-on-surface: #f1f1ef;
+
+  /* ── Outlines ── */
+  --color-outline: #737874;
+  --color-outline-variant: #c2c8c2;
+
+  /* ── Primary — Deep Forest Green ── */
+  --color-primary: #000d06;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #12251c;
+  --color-on-primary-container: #788e81;
+  --color-inverse-primary: #b6ccbe;
+  --color-primary-fixed: #d1e8d9;
+  --color-primary-fixed-dim: #b6ccbe;
+  --color-on-primary-fixed: #0c1f16;
+  --color-on-primary-fixed-variant: #374b41;
+  --color-surface-tint: #4f6358;
+
+  /* ── Secondary — Leaf Green (success, freshness) ── */
+  --color-secondary: #1b6b44;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #a3f1bf;
+  --color-on-secondary-container: #217048;
+  --color-secondary-fixed: #a5f3c2;
+  --color-secondary-fixed-dim: #8ad7a7;
+  --color-on-secondary-fixed: #002110;
+  --color-on-secondary-fixed-variant: #005230;
+
+  /* ── Tertiary — Turmeric Yellow (primary CTA) ── */
+  --color-tertiary: #110800;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #301d00;
+  --color-on-tertiary-container: #b87c00;
+  --color-tertiary-fixed: #ffddb1;
+  --color-tertiary-fixed-dim: #ffba4a;
+  --color-on-tertiary-fixed: #291800;
+  --color-on-tertiary-fixed-variant: #624000;
+
+  /* ── Error ── */
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  /* ── Typography ── */
+  --font-display: "Archivo Narrow", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --text-display-xl: 72px;
+  --text-display-xl--line-height: 80px;
+  --text-display-xl--letter-spacing: -0.02em;
+  --text-display-xl--font-weight: 700;
+
+  --text-display-lg: 56px;
+  --text-display-lg--line-height: 64px;
+  --text-display-lg--letter-spacing: -0.01em;
+  --text-display-lg--font-weight: 700;
+
+  --text-headline-lg: 40px;
+  --text-headline-lg--line-height: 48px;
+  --text-headline-lg--font-weight: 600;
+
+  --text-headline-md: 32px;
+  --text-headline-md--line-height: 40px;
+  --text-headline-md--font-weight: 600;
+
+  --text-body-lg: 20px;
+  --text-body-lg--line-height: 30px;
+
+  --text-body-md: 16px;
+  --text-body-md--line-height: 24px;
+
+  --text-label-lg: 14px;
+  --text-label-lg--line-height: 20px;
+  --text-label-lg--letter-spacing: 0.05em;
+  --text-label-lg--font-weight: 600;
+
+  --text-label-md: 12px;
+  --text-label-md--line-height: 16px;
+  --text-label-md--font-weight: 500;
+
+  /* ── Shape: disciplined and soft, 4px small / 8px large ── */
+  --radius-sm: 0.125rem;
+  --radius-DEFAULT: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+
+  /* ── Layout: 1280px container, 24px gutter, 48px margin, 8px scale ── */
+  --spacing-gutter: 24px;
+  --spacing-margin: 48px;
+  --container-page: 1280px;
+
+  /* ── Elevation: tonal layers over heavy shadows ── */
+  --shadow-ambient: 0 4px 20px rgba(18, 37, 28, 0.08);
+  --shadow-card: 0 1px 2px rgba(18, 37, 28, 0.04);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-on-background);
+    font-family: var(--font-body);
+    font-size: var(--text-body-md);
+    line-height: var(--text-body-md--line-height);
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    color: var(--color-primary);
+  }
+
+  /* Tabular figures everywhere money and countdowns are shown, so digits do
+     not jitter as values tick over. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .material-symbols-outlined {
+    font-family: "Material Symbols Outlined";
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+  }
+
+  .page {
+    max-width: var(--container-page);
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 1024px) {
+    .page {
+      padding-inline: var(--spacing-margin);
+    }
+  }
+
+  /* Level 1: white surface, hairline forest-green border. */
+  .card {
+    background-color: var(--color-surface-container-lowest);
+    border: 1px solid color-mix(in srgb, var(--color-outline-variant) 60%, transparent);
+    border-radius: var(--radius-xl);
+  }
+
+  /* Level 2: lifts on hover with a soft ambient shadow, never a hard drop. */
+  .card-interactive {
+    transition: box-shadow 150ms ease, transform 150ms ease;
+  }
+
+  .card-interactive:hover {
+    box-shadow: var(--shadow-ambient);
+  }
+
+  .label-caps {
+    font-size: var(--text-label-md);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-on-surface-variant);
+  }
+}
+
+/* The menu list can re-render on every stock poll; respect reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
