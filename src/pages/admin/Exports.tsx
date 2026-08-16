@@ -17,6 +17,7 @@ import {
   PageSkeleton,
 } from '../../components/ui'
 import type { VendorExportRow } from '../../types'
+import { apiUrl, config } from '../../config'
 
 /**
  * Exports are authenticated downloads, so a plain <a href> won't do — the
@@ -106,7 +107,7 @@ function VendorCard({
     })
   }
 
-  const base = `/api/admin/exports/vendors/${vendor.vendor_id}?service_date=${serviceDate}`
+  const base = apiUrl(`/admin/exports/vendors/${vendor.vendor_id}?service_date=${serviceDate}`)
 
   return (
     <Card className="overflow-hidden">
@@ -207,7 +208,7 @@ export default function Exports() {
   const [serviceDate, setServiceDate] = useState(todayISO())
   const [rangeStart, setRangeStart] = useState(todayISO())
   const { data, isLoading } = useGetVendorExportSummaryQuery(serviceDate, {
-    pollingInterval: 60_000,
+    pollingInterval: config.poll.admin,
   })
   const { download, busy, error } = useDownload()
   const isAdmin = useAppSelector((state) => state.auth.user?.role === 'admin')
@@ -313,7 +314,7 @@ export default function Exports() {
               variant="secondary"
               icon="picture_as_pdf"
               loading={busy === 'prep-pdf'}
-              onClick={() => download(`/api/admin/exports/prep-list?service_date=${serviceDate}&format=pdf`, 'prep-pdf')}
+              onClick={() => download(apiUrl(`/admin/exports/prep-list?service_date=${serviceDate}&format=pdf`), 'prep-pdf')}
             >
               PDF
             </Button>
@@ -321,7 +322,7 @@ export default function Exports() {
               variant="ghost"
               icon="table_view"
               loading={busy === 'prep-xlsx'}
-              onClick={() => download(`/api/admin/exports/prep-list?service_date=${serviceDate}&format=xlsx`, 'prep-xlsx')}
+              onClick={() => download(apiUrl(`/admin/exports/prep-list?service_date=${serviceDate}&format=xlsx`), 'prep-xlsx')}
             >
               Excel
             </Button>
@@ -342,7 +343,7 @@ export default function Exports() {
               variant="secondary"
               icon="picture_as_pdf"
               loading={busy === 'run-pdf'}
-              onClick={() => download(`/api/admin/exports/run-sheet?service_date=${serviceDate}&format=pdf`, 'run-pdf')}
+              onClick={() => download(apiUrl(`/admin/exports/run-sheet?service_date=${serviceDate}&format=pdf`), 'run-pdf')}
             >
               PDF
             </Button>
@@ -350,7 +351,7 @@ export default function Exports() {
               variant="ghost"
               icon="table_view"
               loading={busy === 'run-xlsx'}
-              onClick={() => download(`/api/admin/exports/run-sheet?service_date=${serviceDate}&format=xlsx`, 'run-xlsx')}
+              onClick={() => download(apiUrl(`/admin/exports/run-sheet?service_date=${serviceDate}&format=xlsx`), 'run-xlsx')}
             >
               Excel
             </Button>
@@ -391,7 +392,7 @@ export default function Exports() {
               loading={busy === 'accounting'}
               onClick={() =>
                 download(
-                  `/api/admin/exports/accounting?start_date=${rangeStart}&end_date=${serviceDate}`,
+                  apiUrl(`/admin/exports/accounting?start_date=${rangeStart}&end_date=${serviceDate}`),
                   'accounting',
                 )
               }

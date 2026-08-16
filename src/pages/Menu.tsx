@@ -10,6 +10,7 @@ import { reconcile, setQuantity } from '../store/cartSlice'
 import { formatMoney, formatTime } from '../lib/format'
 import { Alert, Badge, Button, Card, EmptyState, FoodDot, Icon, Input, Spinner } from '../components/ui'
 import type { PublicMenuItem } from '../types'
+import { config, mediaUrl } from '../config'
 
 /**
  * "Last 4 left" / "14 left today" — scarcity, only when it is real.
@@ -84,7 +85,7 @@ function MenuCard({
       <div className="relative aspect-[16/10] bg-surface-container">
         {item.image_path ? (
           <img
-            src={`/${item.image_path}`}
+            src={mediaUrl(item.image_path) ?? undefined}
             alt={item.name}
             loading="lazy"
             className={`h-full w-full object-cover ${item.is_sold_out ? 'grayscale' : ''}`}
@@ -159,9 +160,9 @@ export default function Menu() {
 
   const { data: menu, isLoading, isError, refetch } = useGetMenuQuery(undefined, {
     // Stock moves while you browse; a stale menu leads to checkout failures.
-    pollingInterval: 45_000,
+    pollingInterval: config.poll.menu,
   })
-  const { data: window } = useGetWindowQuery(undefined, { pollingInterval: 60_000 })
+  const { data: window } = useGetWindowQuery(undefined, { pollingInterval: config.poll.window })
   const { data: settings } = useGetPublicSettingsQuery()
 
   const cart = useAppSelector((state) => state.cart)

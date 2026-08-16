@@ -5,6 +5,7 @@ import { errorMessage } from '../store/baseQuery'
 import { useAppDispatch, useAppSelector } from '../store'
 import { credentialsReceived } from '../store/authSlice'
 import { Alert, Button, Field, Icon, Input } from '../components/ui'
+import { config } from '../config'
 
 export default function Login() {
   const dispatch = useAppDispatch()
@@ -38,7 +39,7 @@ export default function Login() {
           <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary-container">
             <Icon name="lunch_dining" className="text-[28px] text-tertiary-fixed-dim" />
           </span>
-          <h1 className="font-display text-headline-lg text-primary">Mealhub</h1>
+          <h1 className="font-display text-headline-lg text-primary">{config.appName}</h1>
           <p className="text-body-md text-on-surface-variant">
             Sign in to order today's lunch.
           </p>

@@ -6,9 +6,10 @@ import {
 } from '@reduxjs/toolkit/query'
 import { credentialsReceived, loggedOut } from './authSlice'
 import type { RootState } from './index'
+import { config } from '../config'
 
 const rawBaseQuery = fetchBaseQuery({
-  baseUrl: '/api',
+  baseUrl: config.apiBaseUrl,
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.accessToken
     if (token) headers.set('Authorization', `Bearer ${token}`)

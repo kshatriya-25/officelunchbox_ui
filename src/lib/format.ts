@@ -1,9 +1,13 @@
+import { config } from '../config'
 /** Money arrives from the API as a decimal string; never parse it into a float
  *  for arithmetic — only for display. */
-export function formatMoney(value: string | number | null | undefined, symbol = '₹'): string {
+export function formatMoney(
+  value: string | number | null | undefined,
+  symbol = config.currencySymbol,
+): string {
   const amount = Number(value ?? 0)
   if (!Number.isFinite(amount)) return `${symbol}0.00`
-  return `${symbol}${amount.toLocaleString('en-IN', {
+  return `${symbol}${amount.toLocaleString(config.locale, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`
@@ -11,7 +15,7 @@ export function formatMoney(value: string | number | null | undefined, symbol = 
 
 export function formatTime(iso: string | null | undefined): string {
   if (!iso) return '—'
-  return new Date(iso).toLocaleTimeString('en-IN', {
+  return new Date(iso).toLocaleTimeString(config.locale, {
     hour: 'numeric',
     minute: '2-digit',
     hour12: true,
@@ -20,7 +24,7 @@ export function formatTime(iso: string | null | undefined): string {
 
 export function formatDate(iso: string | null | undefined): string {
   if (!iso) return '—'
-  return new Date(iso).toLocaleDateString('en-IN', {
+  return new Date(iso).toLocaleDateString(config.locale, {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
@@ -46,7 +50,8 @@ export function formatCountdown(totalSeconds: number | null | undefined): string
 
 /** Today in the business timezone, as the API expects it (YYYY-MM-DD). */
 export function todayISO(): string {
-  return new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' })
+    // en-CA purely because it formats as ISO; the zone is what matters.
+  return new Date().toLocaleDateString('en-CA', { timeZone: config.timezone })
 }
 
 export const FOOD_TYPE_LABEL: Record<string, string> = {

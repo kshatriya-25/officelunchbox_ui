@@ -23,6 +23,7 @@ import {
   SkeletonRows,
 } from '../../components/ui'
 import type { AdminOrder } from '../../types'
+import { config } from '../../config'
 
 const STATUSES = ['CONFIRMED', 'PREPARING', 'PACKED', 'DISPATCHED', 'DELIVERED', 'CANCELLED']
 
@@ -215,7 +216,7 @@ export default function AdminOrders() {
 
   const { data, isLoading } = useGetAdminOrdersQuery(
     { ...filters, page_size: 100 },
-    { pollingInterval: 45_000 },
+    { pollingInterval: config.poll.orders },
   )
   const { data: riders = [] } = useGetDeliveryPersonsQuery()
   const { data: vendors = [] } = useGetVendorsQuery()

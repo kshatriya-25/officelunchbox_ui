@@ -8,6 +8,7 @@ import {
 import { errorMessage } from '../store/baseQuery'
 import { formatDate, formatMoney, formatTime, PAYMENT_LABEL, STATUS_LABEL } from '../lib/format'
 import { Alert, Badge, Button, Card, EmptyState, FoodDot, Icon, Input, Spinner, STATUS_TONE } from '../components/ui'
+import { config } from '../config'
 
 const STAGES = ['CONFIRMED', 'PREPARING', 'PACKED', 'DISPATCHED', 'DELIVERED'] as const
 
@@ -43,7 +44,7 @@ export default function OrderTicket() {
   const { data: order, isLoading, isError } = useGetMyOrderQuery(Number(orderId), {
     skip: !orderId,
     // The kitchen advances status behind the scenes; keep the ticket honest.
-    pollingInterval: 60_000,
+    pollingInterval: config.poll.orders,
   })
 
   const [submitReference, { isLoading: savingReference }] = useSubmitPaymentReferenceMutation()

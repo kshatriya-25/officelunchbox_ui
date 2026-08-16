@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../store'
 import { loggedOut } from '../../store/authSlice'
 import { formatCountdown, formatTime } from '../../lib/format'
 import { Icon } from '../../components/ui'
+import { config } from '../../config'
 
 /**
  * The back-of-house console.
@@ -81,7 +82,7 @@ function useTicker(seconds: number | null | undefined) {
  * the kitchen's behaviour has to change.
  */
 function CutoffStatus() {
-  const { data: window } = useGetWindowQuery(undefined, { pollingInterval: 60_000 })
+  const { data: window } = useGetWindowQuery(undefined, { pollingInterval: config.poll.window })
   const remaining = useTicker(window?.seconds_to_cutoff)
 
   if (!window?.has_window) {
@@ -128,7 +129,7 @@ function CutoffStatus() {
 }
 
 function AcceptingSwitch() {
-  const { data: window } = useGetWindowQuery(undefined, { pollingInterval: 60_000 })
+  const { data: window } = useGetWindowQuery(undefined, { pollingInterval: config.poll.window })
   const [toggle, { isLoading }] = useToggleWindowMutation()
   const accepting = Boolean(window?.is_accepting)
 
@@ -173,7 +174,7 @@ export default function AdminLayout() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const { user, refreshToken } = useAppSelector((state) => state.auth)
-  const { data: window } = useGetWindowQuery(undefined, { pollingInterval: 60_000 })
+  const { data: window } = useGetWindowQuery(undefined, { pollingInterval: config.poll.window })
   const [logout] = useLogoutMutation()
 
   const [railOpen, setRailOpen] = useState(false)
@@ -197,7 +198,7 @@ export default function AdminLayout() {
     navigate('/login')
   }
 
-  const today = new Date().toLocaleDateString('en-IN', {
+  const today = new Date().toLocaleDateString(config.locale, {
     weekday: 'short',
     day: 'numeric',
     month: 'short',
@@ -210,7 +211,7 @@ export default function AdminLayout() {
           <Icon name="lunch_dining" className="text-[18px] text-on-tertiary-fixed" />
         </span>
         <div className="leading-tight">
-          <p className="font-display text-body-lg font-semibold text-white">Mealhub</p>
+          <p className="font-display text-body-lg font-semibold text-white">{config.appName}</p>
           <p className="text-[10px] uppercase tracking-[0.18em] text-on-primary-container">
             Kitchen Console
           </p>
@@ -373,7 +374,7 @@ export default function AdminLayout() {
 
         <footer className="border-t border-outline-variant/40 px-6 py-4">
           <p className="text-label-md text-on-surface-variant">
-            Mealhub · Kitchen Console
+            {config.appName} · Kitchen Console
             {window?.cutoff_at ? ` · Today's cutoff ${formatTime(window.cutoff_at)}` : ''}
           </p>
         </footer>

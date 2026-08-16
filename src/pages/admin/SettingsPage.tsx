@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useGetSettingsQuery, useUpdateSettingsMutation, useUploadUpiQrMutation } from '../../store/api'
 import { errorMessage } from '../../store/baseQuery'
 import { Alert, Button, Card, Field, ImagePicker, Input, PageHeader, PageSkeleton } from '../../components/ui'
+import { mediaUrl } from '../../config'
 
 export default function SettingsPage() {
   const { data: settings, isLoading } = useGetSettingsQuery()
@@ -161,7 +162,7 @@ export default function SettingsPage() {
             {/* Uploads immediately — unlike the dish photo, the settings row
                 already exists, so there is nothing to stage it against. */}
             <ImagePicker
-              previewUrl={settings?.upi_qr_path ? `/${settings.upi_qr_path}` : null}
+              previewUrl={mediaUrl(settings?.upi_qr_path)}
               onSelect={handleQr}
               busy={uploading}
               emptyIcon="qr_code_2"

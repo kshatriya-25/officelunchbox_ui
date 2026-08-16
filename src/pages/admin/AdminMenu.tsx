@@ -27,6 +27,7 @@ import {
   Select,
 } from '../../components/ui'
 import type { MenuItemAdmin } from '../../types'
+import { mediaUrl } from '../../config'
 
 const BLANK = {
   name: '',
@@ -77,7 +78,7 @@ export default function AdminMenu() {
   const stagedUrl = useMemo(() => (photo ? URL.createObjectURL(photo) : null), [photo])
   useEffect(() => () => { if (stagedUrl) URL.revokeObjectURL(stagedUrl) }, [stagedUrl])
 
-  const photoPreview = stagedUrl ?? (editing?.image_path ? `/${editing.image_path}` : null)
+  const photoPreview = stagedUrl ?? mediaUrl(editing?.image_path)
 
   if (isLoading)
     return (
@@ -382,7 +383,7 @@ export default function AdminMenu() {
                           title={item.image_path ? `Replace photo for ${item.name}` : `Add a photo to ${item.name}`}
                         >
                           {item.image_path ? (
-                            <img src={`/${item.image_path}`} alt="" className="h-full w-full object-cover" />
+                            <img src={mediaUrl(item.image_path) ?? undefined} alt="" className="h-full w-full object-cover" />
                           ) : (
                             <span className="flex h-full w-full items-center justify-center bg-surface-container">
                               <Icon name="add_photo_alternate" className="text-[18px] text-outline" />

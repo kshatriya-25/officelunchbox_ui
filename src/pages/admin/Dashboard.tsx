@@ -7,6 +7,7 @@ import {
   useUpdateOrderStatusMutation,
 } from '../../store/api'
 import { formatMoney, formatTime, STATUS_LABEL } from '../../lib/format'
+import { config } from '../../config'
 import {
   Alert,
   Badge,
@@ -87,10 +88,10 @@ const NEXT_ACTION: Record<string, { status: string; label: string }> = {
 }
 
 export default function Dashboard() {
-  const { data, isLoading } = useGetDashboardQuery(undefined, { pollingInterval: 30_000 })
+  const { data, isLoading } = useGetDashboardQuery(undefined, { pollingInterval: config.poll.admin })
   const { data: orderList, isLoading: loadingOrders } = useGetAdminOrdersQuery(
     { status: 'active', page_size: 10 },
-    { pollingInterval: 30_000 },
+    { pollingInterval: config.poll.admin },
   )
   const { data: riders = [] } = useGetDeliveryPersonsQuery()
   const [updateStatus] = useUpdateOrderStatusMutation()

@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '../store'
 import { clearCart, setDropZone, setNote } from '../store/cartSlice'
 import { formatMoney, formatTime } from '../lib/format'
 import { Alert, Button, Card, Field, FoodDot, Icon, Input, Select } from '../components/ui'
+import { config, mediaUrl } from '../config'
 
 export default function Checkout() {
   const dispatch = useAppDispatch()
@@ -20,7 +21,7 @@ export default function Checkout() {
   const user = useAppSelector((state) => state.auth.user)
 
   const { data: settings } = useGetPublicSettingsQuery()
-  const { data: window } = useGetWindowQuery(undefined, { pollingInterval: 30_000 })
+  const { data: window } = useGetWindowQuery(undefined, { pollingInterval: config.poll.window })
   const { data: locations = [] } = useGetLocationsQuery()
   const [placeOrder, { isLoading }] = usePlaceOrderMutation()
 
@@ -81,7 +82,7 @@ export default function Checkout() {
   // scanning a QR shown on that same phone.
   const upiLink = settings?.upi_id
     ? `upi://pay?pa=${encodeURIComponent(settings.upi_id)}&pn=${encodeURIComponent(
-        settings.upi_payee_name ?? 'Mealhub',
+        settings.upi_payee_name ?? config.appName,
       )}&am=${totals.total.toFixed(2)}&cu=INR`
     : null
 
@@ -174,7 +175,7 @@ export default function Checkout() {
               <div className="flex flex-col items-center gap-3 rounded-xl border border-outline-variant bg-surface-container-lowest p-4">
                 {settings?.upi_qr_path ? (
                   <img
-                    src={`/${settings.upi_qr_path}`}
+                    src={mediaUrl(settings.upi_qr_path) ?? undefined}
                     alt="UPI QR code for payment"
                     className="h-40 w-40 object-contain"
                   />

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useGetPublicSettingsQuery } from '../store/api'
 import { useAppSelector } from '../store'
 import { Card, Icon } from '../components/ui'
+import { config } from '../config'
 
 /**
  * Public bulk-orders page.
@@ -15,7 +16,7 @@ import { Card, Icon } from '../components/ui'
  * because telling someone to message a channel would send them nowhere.
  */
 
-const WHATSAPP_CHANNEL = 'https://whatsapp.com/channel/0029Vb8RVR81iUxhMVsuxV1O'
+const WHATSAPP_CHANNEL = config.whatsappChannelUrl
 
 const OCCASIONS = [
   {
@@ -62,7 +63,7 @@ export default function BulkOrders() {
   const phone = settings?.support_contact
   const phoneDigits = (phone ?? '').replace(/\D/g, '')
   const enquiryText = encodeURIComponent(
-    "Hi Mealhub — I'd like a quote for a bulk order.\n\nHeadcount:\nDate:\nTech park / floor:\nVeg / non-veg split:",
+    `Hi ${config.appName} — I'd like a quote for a bulk order.\n\nHeadcount:\nDate:\nTech park / floor:\nVeg / non-veg split:`,
   )
   const enquiryLink = phoneDigits
     ? `https://wa.me/${phoneDigits.length === 10 ? `91${phoneDigits}` : phoneDigits}?text=${enquiryText}`
@@ -78,7 +79,7 @@ export default function BulkOrders() {
               <Icon name="lunch_dining" className="text-[22px] text-tertiary-fixed-dim" />
             </span>
             <span className="font-display text-headline-md tracking-tight text-primary">
-              Mealhub
+              {config.appName}
             </span>
           </Link>
 
@@ -291,7 +292,7 @@ export default function BulkOrders() {
           <div className="flex items-center gap-2">
             <Icon name="lunch_dining" className="text-[20px] text-primary" />
             <span className="font-display text-body-lg font-semibold text-primary">
-              Mealhub
+              {config.appName}
             </span>
           </div>
           <p className="text-label-md text-on-surface-variant">

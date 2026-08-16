@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../store'
 import { loggedOut } from '../store/authSlice'
 import { formatCountdown, formatTime } from '../lib/format'
 import { Icon } from './ui'
+import { config } from '../config'
 
 /**
  * Live cutoff countdown.
@@ -30,7 +31,7 @@ function useCountdown(seconds: number | null | undefined) {
 }
 
 function WindowPill() {
-  const { data: window } = useGetWindowQuery(undefined, { pollingInterval: 60_000 })
+  const { data: window } = useGetWindowQuery(undefined, { pollingInterval: config.poll.window })
   const remaining = useCountdown(window?.seconds_to_cutoff)
 
   if (!window) return null
@@ -99,7 +100,7 @@ export default function Layout() {
               <Icon name="lunch_dining" className="text-[22px] text-tertiary-fixed-dim" />
             </span>
             <span className="font-display text-headline-md tracking-tight text-primary">
-              Mealhub
+              {config.appName}
             </span>
           </Link>
 
@@ -231,7 +232,7 @@ export default function Layout() {
           <div className="md:col-span-2">
             <div className="flex items-center gap-2">
               <Icon name="lunch_dining" className="text-[22px] text-primary" />
-              <span className="font-display text-headline-md text-primary">Mealhub</span>
+              <span className="font-display text-headline-md text-primary">{config.appName}</span>
             </div>
             <p className="mt-3 max-w-sm text-body-md text-on-surface-variant">
               Elevating the corporate dining experience with chef-curated boxes delivered daily to
@@ -255,7 +256,7 @@ export default function Layout() {
           </div>
         </div>
         <div className="page flex flex-col gap-2 border-t border-outline-variant/40 py-6 text-label-md text-on-surface-variant sm:flex-row sm:justify-between">
-          <span>© {new Date().getFullYear()} Mealhub. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} {config.appName}. All rights reserved.</span>
           <span>Prices include our service margin. GST as applicable.</span>
         </div>
       </footer>
