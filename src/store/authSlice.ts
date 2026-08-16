@@ -12,6 +12,15 @@ interface AuthState {
   initialised: boolean
 }
 
+/**
+ * Only tokens are restored — never the user.
+ *
+ * `user.role` decides whether the console renders. localStorage is fully
+ * client-controlled, so a persisted role is a claim the user can edit. Starting
+ * with `user: null` forces SessionLoader to fetch /auth/me, and the role always
+ * comes from the server. The tokens are safe to persist: they are signed, and
+ * the API verifies them on every request.
+ */
 function restore(): Pick<AuthState, 'accessToken' | 'refreshToken' | 'user'> {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
@@ -20,7 +29,7 @@ function restore(): Pick<AuthState, 'accessToken' | 'refreshToken' | 'user'> {
     return {
       accessToken: parsed.accessToken ?? null,
       refreshToken: parsed.refreshToken ?? null,
-      user: parsed.user ?? null,
+      user: null,
     }
   } catch {
     return { accessToken: null, refreshToken: null, user: null }
@@ -33,12 +42,13 @@ function persist(state: AuthState) {
       localStorage.removeItem(STORAGE_KEY)
       return
     }
+    // Tokens only. The user (and therefore the role) is deliberately not
+    // persisted — see restore().
     localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify({
         accessToken: state.accessToken,
         refreshToken: state.refreshToken,
-        user: state.user,
       }),
     )
   } catch {
